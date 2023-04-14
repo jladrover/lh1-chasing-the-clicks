@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Clickable Button with Geo Map</title>
+	<title>Button with Geo Map</title>
 	<style>
 		button {
+			font:bold;
 			font-size: 24px;
 			padding: 10px;
-      color:cadetblue;
+      		color:cadetblue;
 			margin: 20px;
 		}
 		#map {
@@ -17,7 +18,7 @@
 	</style>
 </head>
 <body>
-  <body style="background-color:cornsilk">
+  <body style="background-color:floralwhite">
 	<section id="clickCountSection">
 		<h1>Click to increase the count by one:</h1>
 		<button id="countButton" onclick="addOnCount()">Click Here</button>
@@ -48,7 +49,7 @@
 					console.log("Click data sent to server.");
 				}
 			};
-			xhttp.open("GET", "track-click.php", true);
+			xhttp.open("GET", "trackclick.php", true);
 			xhttp.send();
 		}
 
