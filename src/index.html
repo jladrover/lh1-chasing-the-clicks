@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Clickable Button with Geo Map</title>
+	<style>
+		button {
+			font-size: 24px;
+			padding: 10px;
+      color:cadetblue;
+			margin: 20px;
+		}
+		#map {
+			height: 400px;
+			width: 600px;
+			margin: 20px;
+		}
+	</style>
+</head>
+<body>
+  <body style="background-color:cornsilk">
+	<section id="clickCountSection">
+		<h1>Click to increase the count by one:</h1>
+		<button id="countButton" onclick="addOnCount()">Click Here</button>
+		<h2>Count: <span id="count">0</span></h2>
+	</section>
+
+	<section id="mapSection">
+		<h1>Clicks geography:</h1>
+		<div id="map"></div>
+	</section>
+
+	<script>
+		var count = localStorage.getItem("count") || 0;	//stores count or sets to 0 if no storage
+		document.getElementById("count").innerHTML = count; // updates page
+
+		function addOnCount() {
+			count++;
+			localStorage.setItem("count", count);
+			document.getElementById("count").innerHTML = count;
+			sendClickData();
+		}
+
+		// sends user click data to server to track
+		function sendClickData() {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					console.log("Click data sent to server.");
+				}
+			};
+			xhttp.open("GET", "track-click.php", true);
+			xhttp.send();
+		}
+
+		// uses google maps api w/key as src below
+		function initializeMap() {
+			var map = new google.maps.Map(document.getElementById("map"), {
+				center: {lat: 0, lng: 0},
+				zoom: 2
+			});
+			loadlocData(map);
+		}
+
+		function loadlocData(map) {
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var locationData = JSON.parse(this.responseText);
+					for (var i = 0; i < locationData.length; i++) {
+						var marker = new google.maps.Marker({
+							position: {lat: locationData[i].lat, lng: locationData[i].lng},
+							map: map
+						});
+					}
+				}
+			};
+			xhttp.open("GET", "getloc.php", true);
+			xhttp.send();
+		}
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAORdXrwq5CPokDPB6MfoCmKgA_FEbS4v0&callback=initializeMap"
+        async defer></script>
+</body>
+</html>
